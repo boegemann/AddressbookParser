@@ -3,16 +3,16 @@ package org.addressbook.ingo.analyser;
 import org.addressbook.ingo.analyser.addresscsv.AddressRecord;
 import org.addressbook.ingo.analyser.addresscsv.AddressRecordParser;
 import org.addressbook.ingo.analyser.addresscsv.CsvReader;
+import org.addressbook.ingo.analyser.addresscsv.MaleCounter;
+import org.addressbook.ingo.analyser.generic.IterableDataAnalysisRunner;
+import org.addressbook.ingo.analyser.generic.StreamingAnalyser;
 import org.apache.commons.csv.CSVRecord;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,6 +44,25 @@ class SpecifiedScenarioRunnerTest {
 
             });
             assertEquals(5,addresses.size());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void testMalesCounter(){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("AddressBook.csv"))
+        ))) {
+            Iterable<CSVRecord> csvIterable = new CsvReader().getCsvIterable(reader);
+
+            AddressRecordParser parser = new AddressRecordParser();
+            List<AddressRecord> addresses = new ArrayList<>();
+            Map<String, StreamingAnalyser<AddressRecord>> analysers = new HashMap<>();
+            analysers.put("Males" ,new MaleCounter());
+            Map<String, String> results = IterableDataAnalysisRunner.analyse(csvIterable,parser,analysers);
+            assertEquals(1,results.size());
+            assertEquals("3",results.get("Males"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

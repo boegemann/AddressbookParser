@@ -2,6 +2,8 @@ package org.addressbook.ingo.analyser.generic;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Data Analyser implementation for Iterables
@@ -30,7 +32,9 @@ public class IterableDataAnalysisRunner {
                     analyser.digest(parsed)
             );
         }
-
-        return new HashMap<>();
+        return analyserMap.entrySet().stream().collect(Collectors.toMap(
+                Map.Entry::getKey,
+                e -> e.getValue().getResult()
+        ));
     }
 }
