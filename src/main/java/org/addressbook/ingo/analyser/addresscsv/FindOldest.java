@@ -4,6 +4,9 @@ import org.addressbook.ingo.analyser.generic.StreamingAnalyser;
 
 import java.time.LocalDate;
 
+/**
+ * StreamingAnalyser implementation to find the oldest person contained in the address book
+ */
 public class FindOldest implements StreamingAnalyser<AddressRecord> {
     private LocalDate oldest = null;
     private String name = "";

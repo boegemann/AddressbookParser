@@ -5,6 +5,10 @@ import org.addressbook.ingo.analyser.generic.StreamingAnalyser;
 import java.time.Duration;
 import java.time.LocalDate;
 
+/**
+ * StreamingAnalyser implementation to find the age difference in days
+ * between two persons contained in the address book
+ */
 public class AgeDiffCalculator implements StreamingAnalyser<AddressRecord> {
     private final String firstPerson;
     private final String secondPerson;

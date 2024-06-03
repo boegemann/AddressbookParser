@@ -6,6 +6,9 @@ import org.apache.commons.csv.CSVRecord;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * RowParser implementation translating Apache CSV records into the AddressRecord class
+ */
 public class AddressRecordParser implements RowParser<CSVRecord, AddressRecord> {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
 

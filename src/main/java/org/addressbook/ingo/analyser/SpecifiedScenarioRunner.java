@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Runner class for the given example
+ */
 public class SpecifiedScenarioRunner {
 
     public static void main(String[] args) {
