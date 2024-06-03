@@ -1,9 +1,6 @@
 package org.addressbook.ingo.analyser;
 
-import org.addressbook.ingo.analyser.addresscsv.AddressRecord;
-import org.addressbook.ingo.analyser.addresscsv.AddressRecordParser;
-import org.addressbook.ingo.analyser.addresscsv.CsvReader;
-import org.addressbook.ingo.analyser.addresscsv.MaleCounter;
+import org.addressbook.ingo.analyser.addresscsv.*;
 import org.addressbook.ingo.analyser.generic.IterableDataAnalysisRunner;
 import org.addressbook.ingo.analyser.generic.StreamingAnalyser;
 import org.apache.commons.csv.CSVRecord;
@@ -57,12 +54,29 @@ class SpecifiedScenarioRunnerTest {
             Iterable<CSVRecord> csvIterable = new CsvReader().getCsvIterable(reader);
 
             AddressRecordParser parser = new AddressRecordParser();
-            List<AddressRecord> addresses = new ArrayList<>();
             Map<String, StreamingAnalyser<AddressRecord>> analysers = new HashMap<>();
             analysers.put("Males" ,new MaleCounter());
             Map<String, String> results = IterableDataAnalysisRunner.analyse(csvIterable,parser,analysers);
             assertEquals(1,results.size());
             assertEquals("3",results.get("Males"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void testOldestCounter(){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("AddressBook.csv"))
+        ))) {
+            Iterable<CSVRecord> csvIterable = new CsvReader().getCsvIterable(reader);
+
+            AddressRecordParser parser = new AddressRecordParser();
+            Map<String, StreamingAnalyser<AddressRecord>> analysers = new HashMap<>();
+            analysers.put("Oldest Person" ,new FindOldest());
+            Map<String, String> results = IterableDataAnalysisRunner.analyse(csvIterable,parser,analysers);
+            assertEquals(1,results.size());
+            assertEquals("Wes Jackson",results.get("Oldest Person"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
