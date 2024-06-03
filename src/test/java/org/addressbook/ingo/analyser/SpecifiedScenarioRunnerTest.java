@@ -1,5 +1,7 @@
 package org.addressbook.ingo.analyser;
 
+import org.addressbook.ingo.analyser.addresscsv.AddressRecord;
+import org.addressbook.ingo.analyser.addresscsv.AddressRecordParser;
 import org.addressbook.ingo.analyser.addresscsv.CsvReader;
 import org.apache.commons.csv.CSVRecord;
 import org.junit.jupiter.api.Test;
@@ -7,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -21,6 +25,25 @@ class SpecifiedScenarioRunnerTest {
         ))) {
             Iterable<CSVRecord> csvIterable = new CsvReader().getCsvIterable(reader);
             assertNotNull(csvIterable);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void iCanParseTheRecordsInOurCSV() {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("AddressBook.csv"))
+        ))) {
+            Iterable<CSVRecord> csvIterable = new CsvReader().getCsvIterable(reader);
+
+            AddressRecordParser parser = new AddressRecordParser();
+            List<AddressRecord> addresses = new ArrayList<>();
+            csvIterable.forEach(record -> {
+                addresses.add(parser.parseRow(record));
+
+            });
+            assertEquals(5,addresses.size());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
