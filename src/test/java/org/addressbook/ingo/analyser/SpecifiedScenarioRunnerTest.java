@@ -36,13 +36,10 @@ class SpecifiedScenarioRunnerTest {
 
             AddressRecordParser parser = new AddressRecordParser();
             List<AddressRecord> addresses = new ArrayList<>();
-            csvIterable.forEach(record -> {
-                addresses.add(parser.parseRow(record));
-
-            });
+            csvIterable.forEach(record -> addresses.add(parser.parseRow(record)));
             assertEquals(5,addresses.size());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            fail(e);
         }
     }
 
@@ -57,10 +54,9 @@ class SpecifiedScenarioRunnerTest {
             Map<String, StreamingAnalyser<AddressRecord>> analysers = new HashMap<>();
             analysers.put("Males" ,new MaleCounter());
             Map<String, String> results = IterableDataAnalysisRunner.analyse(csvIterable,parser,analysers);
-            assertEquals(1,results.size());
             assertEquals("3",results.get("Males"));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            fail(e);
         }
     }
 
@@ -78,7 +74,7 @@ class SpecifiedScenarioRunnerTest {
             assertEquals(1,results.size());
             assertEquals("Wes Jackson",results.get("Oldest Person"));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            fail(e);
         }
     }
 
@@ -96,16 +92,20 @@ class SpecifiedScenarioRunnerTest {
             assertEquals(1,results.size());
             assertEquals("2862",results.get("Age Difference Bill and Paul"));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            fail(e);
         }
     }
 
     @Test
     public void iGivenTheProvidedAddressBookFileIGetTheSpecifiedOutputs() {
         Map<String, String> results = new SpecifiedScenarioRunner().runSpecifiedScenario();
+        assertEquals(3,results.size());
         assertTrue(results.containsKey("Males"));
+        assertEquals("3",results.get("Males"));
         assertTrue(results.containsKey("Oldest Person"));
+        assertEquals("Wes Jackson",results.get("Oldest Person"));
         assertTrue(results.containsKey("Age Difference Bill and Paul"));
+        assertEquals("2862",results.get("Age Difference Bill and Paul"));
     }
 
 }

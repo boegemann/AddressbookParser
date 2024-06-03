@@ -15,7 +15,21 @@
 
         <org.apache.commons.csv>1.11.0</org.apache.commons.csv>
         <org.junit.jupiter.junit-jupiter-engine>5.10.2</org.junit.jupiter.junit-jupiter-engine>
+        <org.codehaus.mojo.exec-maven-plugin>3.3.0</org.codehaus.mojo.exec-maven-plugin>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${org.codehaus.mojo.exec-maven-plugin}</version>
+                <configuration>
+                    <mainClass>org.addressbook.ingo.analyser.SpecifiedScenarioRunner</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
 
@@ -33,5 +47,7 @@
         </dependency>
 
     </dependencies>
+
+
 
 </project>
